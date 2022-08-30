@@ -30,31 +30,29 @@ ElevatedButtonThemeData defoultElevatedButton = ElevatedButtonThemeData(
 
 class DefaultColorsPalette {
   static const MaterialColor defoultColorSwatch = MaterialColor(
-    0xFF02735E,
+    0xFFf97e3e,
     <int, Color>{
-      50: Color(0xFFcce3de), //10%
-      100: Color(0xff99c7be), //20%
-      200: Color(0xff67ab9e), //30%
-      300: Color(0xff348f7e), //40%
-      400: Color(0xff02735e), //50%
-      500: Color(0xff015c4b), //60%
-      600: Color(0x0ff14538), //70%
-      700: Color(0xff002e25), //80%
-      800: Color(0xff001712), //90%
+      50: Color(0xFFfff9e5), //10%
+      100: Color(0xffffeebd), //20%
+      200: Color(0xffffda6d), //30%
+      300: Color(0xffffbb49), //40%
+      400: Color(0xFFf97e3e), //50%
+      500: Color(0xffc76431), //60%
+      600: Color(0x0f7c3f1f), //70%
+      700: Color(0xff633218), //80%
+      800: Color(0xff31190c), //90%
       900: Color(0xff000000), //100%
     },
   );
   static const ColorScheme defoultColorScheme = ColorScheme.light(
-    primary: Color(0xFF02735E),
-    primaryContainer: Color(0xFFcce3de),
+    primary: Color(0xFFf97e3e),
+    primaryContainer: Color(0xFFfff9e5),
     onPrimary: Color(0xFFFFFFFF),
     onPrimaryContainer: Color(0xFF140b24),
-    secondary: Color(0xFF034159),
+    secondary: Color(0xFF4e6cac),
     onSecondary: Color(0xFFFFFFFF),
-    secondaryContainer: Color(0xFFccd9dd),
-    tertiary: Color(0xFF0CF25D),
-    onTertiary: Color(0xFF023012),
-    onSecondaryContainer: Color(0xFF1b240b),
+    secondaryContainer: Color(0xFFe6eaf3),
+    onSecondaryContainer: Color(0xFF070a11),
     background: Color(0xFFFFFFFF),
     surface: Color(0xFFFFFFFF),
     error: Colors.red,

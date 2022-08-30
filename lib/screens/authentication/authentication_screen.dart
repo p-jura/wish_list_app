@@ -9,8 +9,13 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
+  static const MAIN_FLEX_VALUE = 5;
+  static const FOCUSED_FIELD_FLEX_VALUE = 1;
+
   @override
   Widget build(BuildContext context) {
+    bool isKeybordVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return Scaffold(
       backgroundColor: const Color(0xFF2f2725),
       body: GestureDetector(
@@ -22,17 +27,19 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              flex: 4,
+              flex:
+                  isKeybordVisible ? FOCUSED_FIELD_FLEX_VALUE : MAIN_FLEX_VALUE,
               child: Container(
                 decoration: const BoxDecoration(
                   image: DecorationImage(
+                    alignment: Alignment.bottomCenter,
                     fit: BoxFit.fitWidth,
                     image: AssetImage('assets/auth-image.jpg'),
                   ),
                 ),
               ),
             ),
-            const AuthFormFields(),
+            AuthFormFields(isKeybordVisible: isKeybordVisible),
           ],
         ),
       ),

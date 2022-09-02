@@ -32,8 +32,9 @@ class SigningInLogingInBloc {
 
     _hasAccountSink.add(_hasAccount);
   }
-
+  @override
   void dispose() {
+    
     _hasAccountEventController.close();
     _hasAccountStateController.close();
   }

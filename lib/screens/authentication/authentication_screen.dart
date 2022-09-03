@@ -1,4 +1,9 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:wish_list_app/providers/cubit/account_holder_cubit.dart';
 import 'package:wish_list_app/screens/authentication/widgets/auth_form_fields.dart';
 
 class AuthenticationScreen extends StatefulWidget {
@@ -9,7 +14,7 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
-  static const MAIN_FLEX_VALUE = 5;
+  static const MAIN_FLEX_VALUE = 7;
   static const FOCUSED_FIELD_FLEX_VALUE = 1;
 
   @override
@@ -39,7 +44,17 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                 ),
               ),
             ),
-            AuthFormFields(isKeybordVisible: isKeybordVisible),
+            BlocProvider(
+              create: (_) => AccountHolderCubit(),
+              child: BlocBuilder<AccountHolderCubit, AccountHolderState>(
+                builder: (context, state) {
+                  return AuthFormFields(
+                    isKeybordVisible: isKeybordVisible,
+                    haveAccount: state.haveAccount,
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

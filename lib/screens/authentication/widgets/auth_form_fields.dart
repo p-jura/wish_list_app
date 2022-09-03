@@ -1,130 +1,191 @@
 import 'package:flutter/material.dart';
-import 'package:wish_list_app/models/auth_screen_bloc.dart';
-import 'package:wish_list_app/models/auth_scrren_event.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:wish_list_app/providers/cubit/account_holder_cubit.dart';
 
 class AuthFormFields extends StatefulWidget {
-  AuthFormFields({required this.isKeybordVisible, Key? key}) : super(key: key);
+  const AuthFormFields(
+      {required this.isKeybordVisible, required this.haveAccount, Key? key})
+      : super(key: key);
 
   final bool isKeybordVisible;
-
+  final bool haveAccount;
   @override
   State<AuthFormFields> createState() => _AuthFormFieldsState();
 }
 
 class _AuthFormFieldsState extends State<AuthFormFields> {
-  
+  static const double TXTFD_HORIZONTAL_MARGIN_DEVIDER = 1.2;
+
   final InputDecoration textFormFieldDecoration = InputDecoration(
-    constraints: const BoxConstraints(maxWidth: 300),
+    contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(30),
       borderSide: const BorderSide(),
     ),
   );
 
-  final _bloc = SigningInLogingInBloc();
+  final globalKey = GlobalKey<FormState>();
+
+  void validate() {
+    globalKey.currentState!.validate();
+  }
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
     final colorScheme = Theme.of(context).colorScheme;
     return Expanded(
-      flex: 5,
-      child: StreamBuilder<bool>(
-        stream: _bloc.hasAccount,
-        initialData: false,
-        builder: (ctx, snapshot) {
-          bool haveAccount = snapshot.data!;
-          return Container(
-            constraints: BoxConstraints(minWidth: deviceSize.width),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0xFF000000),
-                  blurRadius: 8,
-                  offset: Offset(0, -3),
+      flex: 8,
+      child: Container(
+        alignment: Alignment.center,
+        constraints: BoxConstraints(minWidth: deviceSize.width),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0xFF000000),
+              blurRadius: 8,
+              offset: Offset(0, -3),
+            ),
+          ],
+          color: const Color.fromARGB(255, 255, 255, 255),
+          borderRadius: BorderRadius.only(
+            topLeft: const Radius.circular(60),
+            bottomRight: widget.isKeybordVisible
+                ? Radius.zero
+                : const Radius.circular(60),
+          ),
+        ),
+        child: Form(
+          key: globalKey,
+          child: LayoutBuilder(builder: (context, viewportConstraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: viewportConstraints.maxHeight,
                 ),
-              ],
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.only(
-                topLeft: const Radius.circular(60),
-                bottomRight: widget.isKeybordVisible
-                    ? Radius.zero
-                    : const Radius.circular(60),
-              ),
-            ),
-            child: Form(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    haveAccount
-                        ? 'Log in to your account'
-                        : 'Create an Account',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  TextFormField(
-                    decoration: textFormFieldDecoration.copyWith(
-                      label: const Text('Email adress'),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      widget.haveAccount
+                          ? 'Log in to your account'
+                          : 'Create an Account',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  ),
-                  TextFormField(
-                    decoration: textFormFieldDecoration.copyWith(
-                      label: const Text('Password'),
-                    ),
-                  ),
-                  Visibility(
-                    visible: !haveAccount,
-                    child: TextFormField(
+                    TextFormField(
+                      maxLines: 1,
                       decoration: textFormFieldDecoration.copyWith(
-                        label: const Text('Submit password'),
+                        label: const Text('Email adress'),
+                        constraints: BoxConstraints(
+                            maxWidth: deviceSize.width /
+                                TXTFD_HORIZONTAL_MARGIN_DEVIDER),
                       ),
+                      validator: ((value) {
+                        if (value != null) {
+                          if (value.isEmpty ||
+                              !value.contains('@') ||
+                              (value.length <= 5)) {
+                            return 'Please enter correct email adress';
+                          } else {
+                            return 'Error during validation';
+                          }
+                        }
+                        return null;
+                      }),
                     ),
-                  ),
-                  SizedBox(
-                    width: deviceSize.width,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(haveAccount ? 'SIGN IN' : 'SIGN UP'),
+                    TextFormField(
+                      maxLines: 1,
+                      decoration: textFormFieldDecoration.copyWith(
+                        label: const Text('Password'),
+                        constraints: BoxConstraints(
+                            maxWidth: deviceSize.width /
+                                TXTFD_HORIZONTAL_MARGIN_DEVIDER),
+                      ),
+                      validator: ((value) {
+                        if (value != null) {
+                          if (value.isEmpty || (value.length <= 7)) {
+                            return 'Password need\'s to be at least 8 characters long';
+                          } else {
+                            return 'Error during validation';
+                          }
+                        }
+                        return null;
+                      }),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(haveAccount
-                          ? 'You dont have an account?'
-                          : 'If you have an account'),
-                      ElevatedButton(
-                        onPressed: () {
-                          _bloc.hasAccountEventSink.add(
-                            snapshot.data == true ? SignIn() : SignUp(),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.transparent,
-                            shadowColor: Colors.transparent),
-                        child: Text(
-                          haveAccount ? 'CREATE' : 'SIGN IN',
-                          style: TextStyle(
-                              color: colorScheme.secondary,
-                              fontWeight: FontWeight.bold),
+                    Visibility(
+                      visible: !widget.haveAccount,
+                      child: TextFormField(
+                        maxLines: 1,
+                        decoration: textFormFieldDecoration.copyWith(
+                          label: const Text('Submit password'),
+                          constraints: BoxConstraints(
+                              maxWidth: deviceSize.width /
+                                  TXTFD_HORIZONTAL_MARGIN_DEVIDER),
                         ),
+                        validator: ((value) {
+                          if (value != null) {
+                            if (value.isEmpty || (value.length <= 7)) {
+                              return 'Password need\'s to be at least 8 characters long';
+                            } else {
+                              return 'Error during validation';
+                            }
+                          }
+                          return null;
+                        }),
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    SizedBox(
+                      width: deviceSize.width,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          validate();
+                        },
+                        child: Text(widget.haveAccount ? 'SIGN IN' : 'SIGN UP'),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(widget.haveAccount
+                            ? 'You dont have an account?'
+                            : 'If you have an account'),
+                        ElevatedButton(
+                          onPressed: () {
+                            widget.haveAccount == true
+                                ? context
+                                    .read<AccountHolderCubit>()
+                                    .changeStateToCreateAccount(true)
+                                : context
+                                    .read<AccountHolderCubit>()
+                                    .changeStateToCreateAccount(false);
+                          },
+                          style: ElevatedButton.styleFrom(
+                              primary: Colors.transparent,
+                              shadowColor: Colors.transparent),
+                          child: Text(
+                            widget.haveAccount ? 'CREATE' : 'SIGN IN',
+                            style: TextStyle(
+                                color: colorScheme.secondary,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          }),
+        ),
       ),
     );
   }
 
   @override
   void dispose() {
-    _bloc.dispose();
     super.dispose();
   }
 }

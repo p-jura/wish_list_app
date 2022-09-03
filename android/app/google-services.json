@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "708521059682",
+    "project_id": "wish-list-app-8b059",
+    "storage_bucket": "wish-list-app-8b059.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:708521059682:android:0ee7bbe97fa20347eff83b",
+        "android_client_info": {
+          "package_name": "com.pjuroszek.wish_list_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "708521059682-83g890c05oqll79a198vgjed2o3dt0p3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8rvQ-dRTQXt9aOL-tdmMXgtBb9EPBqaQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "708521059682-83g890c05oqll79a198vgjed2o3dt0p3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
